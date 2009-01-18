@@ -13,11 +13,11 @@ Generation
 
 That will generate:
 
-  * ContactController
-  * Steps under `apps/controllers/contact`
-  * Views for the wizard and each step under `apps/views/contact`
-  * Specs under `spec/controllers/contact` for each step
-  * Specs for the views under `spec/views/contact`
+* ContactController
+* Steps under `apps/controllers/contact`
+* Views for the wizard and each step under `apps/views/contact`
+* Specs under `spec/controllers/contact` for each step
+* Specs for the views under `spec/views/contact`
 
 You will want to edit each step's definition and view to tailor it for your
 application. You may also need to edit the base class for each step too.
