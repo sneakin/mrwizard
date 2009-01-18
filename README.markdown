@@ -9,7 +9,7 @@ can use to easily generate the files needed for your wizard.
 Generation
 ==========
 
-> ./script/generate mr_wizard contact personal_info survey message
+    ./script/generate mr_wizard contact personal_info survey message
 
 That will generate:
 
@@ -29,19 +29,24 @@ Routing
 MrWizard provides a routing helper that simplifies creating named routes for
 your wizard. In `config/routes.rb` you just need to add a line such as:
 
-  map.wizard map, :contact, :controller => 'contact'
+    map.wizard map, :contact, :controller => 'contact'
 
-Take note of the first argument. You have to pass it the routing mapper to
+*Warning!* Take note of the first argument. You have to pass it the routing mapper to
 ensure prior options are maintained such as when you nest a wizard under a
 resource.
+
+
+Resources
+=========
+
+* [MrWizard](http://github.com/sneakin/mrwizard)
+* [SemanticGap](http://www.semanticgap.com/)
+* [Rails](http://rubyonrails.org/)
 
 
 Legal
 =====
 
-Copyright (c) 2009 SemanticGap®, released under the MIT license
+Copyright (c) 2009 SemanticGap(R), released under the MIT license
 
-SemanticGap® is a registered service mark of Nolan Eakins. All rights reserved.
-
-
-http://www.semanticgap.com/
+SemanticGap(R) is a registered service mark of Nolan Eakins. All rights reserved.
