@@ -1,6 +1,7 @@
+<h1><%= h(@title) %></h1>
 <% form_for :wizard, :url => @wizard.url do |f| -%>
   <%= hidden_field_tag :step, wizard.step.name %>
-  <%= render :partial => "place_order/#{wizard.step.view}", :locals => { :wizard => wizard, :form => f } %>
+  <%= render :partial => wizard.step.view, :locals => { :wizard => wizard, :form => f } %>
   <% unless wizard.done? -%>
   <div class="buttons">
     <%= f.submit 'Next' %>

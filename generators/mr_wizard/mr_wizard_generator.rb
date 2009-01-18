@@ -3,19 +3,31 @@ class MrWizardGenerator < Rails::Generator::NamedBase
 
   def manifest
     record do |m|
+      logger.route "You need to add a route such as: map.wizard map, :#{name}, :controller => '#{name}' # make note of the 1st argument!"
+
       m.directory "app/controllers/#{name}"
-      m.template 'base.rb', "app/controllers/#{name}/base_controller.rb", :collision => :skip
+      m.template 'controller.rb', "app/controllers/#{name}_controller.rb"
+      m.template 'base_step.rb', "app/controllers/#{name}/step.rb"
 
       m.directory "spec/controllers/#{name}"
-      m.template 'spec.rb', "spec/controllers/#{name}/base_spec.rb"
+      m.directory "spec/views/#{name}"
+      m.template 'controller_spec.rb', "spec/controllers/#{name}_controller_spec.rb"
 
       m.directory "app/views/#{name}"
+      m.file "show.html.erb", "app/views/#{name}/show.html.erb"
+      m.template "show_spec.html.erb", "spec/views/#{name}/show.html.erb_spec.rb"
+      m.template('step.html.erb', "app/views/#{name}/_done.html.erb",
+                 :assigns => { :step => :done, :step_class => 'DoneStep' } )
 
-      actions.each do |step|
-        m.template 'step.rb', "app/controllers/#{name}/#{step}_controller.rb", :assigns => { :step => step, :step_class => step.classify }
+      actions.collect { |step|
+        step.underscore
+      }.each do |step|
+        options = { :assigns => { :step => step, :step_class => step.classify } }
+        m.template('step.rb', "app/controllers/#{name}/#{step}_step.rb", options)
+        m.file('step.html.erb', "app/views/#{name}/_#{step}.html.erb")
+        m.template('step_spec.rb', "spec/controllers/#{name}/#{step}_step_spec.rb", options)
+        m.template('step_spec.html.erb', "spec/views/#{name}/_#{step}.html.erb_spec.rb", options)
       end
-
-      logger.route "You need to add a route."
     end
   end
 end                                                 
