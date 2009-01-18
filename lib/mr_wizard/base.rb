@@ -3,25 +3,34 @@ module MrWizard
     class_inheritable_accessor :steps, :url
     attr_reader :step, :controller
 
+    self.steps = Array.new
+
     def initialize(step_name, controller)
       @controller = controller
-      @step = create_step(step_name)
+
+      begin
+        @step = create_step(step_name)
+      rescue ArgumentError
+        @step = create_step(self.class.steps.first)
+      end
     end
 
     def self.find_step(name)
-      self.steps.find { |step| step.name == name.to_sym } if name
+      self.steps.find { |step| step == name.to_sym } if name
     end
 
     def step_name(name)
-      "#{controller.class.name.gsub(/Controller$/, '')}::#{name.to_s.classify}Step"
+      "#{controller.class.name.gsub(/Controller$/, '')}::#{name.to_s.camelize}Step"
     end
 
     def create_step(name)
       name ||= self.steps.first
-      if name.to_sym == :done
-        DoneStep.new(self)
-      else
+      if name == nil || name.to_sym == :done
+        MrWizard::DoneStep.new(self)
+      elsif self.class.find_step(name)
         step_name(name).constantize.new(self)
+      else
+        raise ArgumentError.new("Unknown step: #{name}")
       end
     end
 
@@ -43,6 +52,8 @@ module MrWizard
     end
 
     def next_step(step = @step)
+      return :done if step.name == :done
+
       i = self.class.step_index(step.name)
       raise RuntimeError.new("Unknown step: #{step.name}") unless i
 

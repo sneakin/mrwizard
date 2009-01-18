@@ -1,4 +1,5 @@
 require 'mr_wizard/step'
+require 'mr_wizard/done_step'
 require 'mr_wizard/base'
 require 'mr_wizard/mixin'
 require 'mr_wizard/routing'

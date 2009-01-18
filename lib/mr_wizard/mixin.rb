@@ -15,8 +15,7 @@ module MrWizard
 
     def create
       if wizard.update(params[:wizard])
-        logger.debug("Next step: #{wizard.next_step}")
-        redirect_to(@wizard.url(:step => @wizard.next_step))
+        redirect_to(wizard.url(:step => wizard.next_step))
       else
         show
       end

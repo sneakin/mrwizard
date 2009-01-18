@@ -26,11 +26,17 @@ module MrWizard
     end
 
     def view
-      self.class.name.demodulize.gsub(/Step$/, '').underscore
+      prepped_class_name.underscore
     end
 
     def title
-      self.class.title || self.class.name.demodulize.titleize
+      self.class.title || prepped_class_name.titleize
+    end
+
+    private
+
+    def prepped_class_name
+      self.class.name.demodulize.gsub(/Step$/, '')
     end
   end
 end
