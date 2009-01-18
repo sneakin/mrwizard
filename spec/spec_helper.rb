@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'spec'
 
 $: << File.join(File.dirname(File.dirname(__FILE__)), 'lib') << File.dirname(File.dirname(__FILE__))

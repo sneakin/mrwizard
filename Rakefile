@@ -1,15 +1,26 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
+require 'spec/rake/spectask'
 
 desc 'Default: run unit tests.'
-task :default => :test
+task :default => :spec
 
 desc 'Test the mrwizard plugin.'
-Rake::TestTask.new(:test) do |t|
+Spec::Rake::SpecTask.new(:spec) do |t|
   t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
+  t.pattern = 'spec/**/*_spec.rb'
   t.verbose = true
+end
+
+namespace :spec do
+  desc 'Test the mrwizard plugin.'
+  Spec::Rake::SpecTask.new(:rcov) do |t|
+    t.rcov = true
+    t.libs << 'lib'
+    t.pattern = 'spec/**/*_spec.rb'
+    t.verbose = true
+  end
 end
 
 desc 'Generate documentation for the mrwizard plugin.'
