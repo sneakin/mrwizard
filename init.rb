@@ -1,5 +1,9 @@
+require 'mr_wizard'
+
 class ActionController::Base
   include MrWizard
 end
 
-ActionController::Base.append_view_path File.join(File.dirname(__FILE__), "views")
+class ActionController::Routing::RouteSet::Mapper
+  include MrWizard::Routing
+end

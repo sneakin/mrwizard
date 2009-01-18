@@ -1,8 +1,7 @@
-require 'mr_wizard/step_definition'
-require 'mr_wizard/done_step'
-require 'mr_wizard/step_instance'
+require 'mr_wizard/step'
 require 'mr_wizard/base'
 require 'mr_wizard/mixin'
+require 'mr_wizard/routing'
 
 module MrWizard
   def self.included(base)
@@ -15,7 +14,6 @@ module MrWizard
       include MrWizard::Mixin
 
       klass = Class.new(MrWizard::Base)
-      klass.class_eval(&block)
       options.each { |k, v| klass.send("#{k}=", v) }
       self.wizard_class = klass
     end

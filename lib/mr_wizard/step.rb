@@ -1,31 +1,36 @@
 module MrWizard
-  module Step
-    def self.included(base)
-      base.extend(ClassMethods)
+  class Step
+    class_inheritable_accessor :title
+    attr_reader :wizard
+
+    def initialize(wizard)
+      @wizard = wizard
     end
 
-    module ClassMethods
-      def step(step = nil, options = Hash.new)
-        @step = step if step
-        @wizard = options[:for]
-        @step
-      end
+    delegate :params, :controller, :to => :wizard
 
-      def wizard
-        @wizard
-      end
+    def show
+      true
     end
 
-    def redirect_to_next_step
-      redirect_to(wizard_path)
+    def update
+      true
     end
 
-    def wizard_path
-      send("#{self.class.wizard}_path", :step => self.class.step)
+    def needed?
+      true
     end
 
-    def create
-      update
+    def name
+      view.to_sym
+    end
+
+    def view
+      self.class.name.demodulize.gsub(/Step$/, '').underscore
+    end
+
+    def title
+      self.class.title || self.class.name.demodulize.titleize
     end
   end
 end
