@@ -5,7 +5,8 @@ class <%= class_name %>::<%= step_class %>Step < <%= class_name %>::Step
   end
 
   def show
-    # show the step
+    # setup any objects needed to show the step
+    # the rendering will be handled by the wizard's controller
   end
 
   def update
