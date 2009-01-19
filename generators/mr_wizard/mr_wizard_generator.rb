@@ -3,6 +3,8 @@ class MrWizardGenerator < Rails::Generator::NamedBase
 
   def manifest
     record do |m|
+      steps = actions.collect { |step| step.underscore }
+
       logger.route "You need to add a route such as: map.wizard map, :#{name}, :controller => '#{name}' # make note of the 1st argument!"
 
       m.directory "app/controllers/#{name}"
@@ -11,7 +13,7 @@ class MrWizardGenerator < Rails::Generator::NamedBase
 
       m.directory "spec/controllers/#{name}"
       m.directory "spec/views/#{name}"
-      m.template 'controller_spec.rb', "spec/controllers/#{name}_controller_spec.rb"
+      m.template 'controller_spec.rb', "spec/controllers/#{name}_controller_spec.rb", :assigns => { :steps => steps }
 
       m.directory "app/views/#{name}"
       m.file "show.html.erb", "app/views/#{name}/show.html.erb"
@@ -19,9 +21,7 @@ class MrWizardGenerator < Rails::Generator::NamedBase
       m.template('step.html.erb', "app/views/#{name}/_done.html.erb",
                  :assigns => { :step => :done, :step_class => 'DoneStep' } )
 
-      actions.collect { |step|
-        step.underscore
-      }.each do |step|
+      steps.each do |step|
         options = { :assigns => { :step => step, :step_class => step.classify } }
         m.template('step.rb', "app/controllers/#{name}/#{step}_step.rb", options)
         m.file('step.html.erb', "app/views/#{name}/_#{step}.html.erb")

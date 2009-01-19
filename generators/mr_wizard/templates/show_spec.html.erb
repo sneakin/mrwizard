@@ -1,16 +1,67 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe "<%= name %>/show.html.erb" do
-  it "has a form that posts to the wizard\'s URL"
-  it "has a hidden field with the wizard\'s step"
+  class TestWizard < MrWizard::Base
+    self.url = :wizard_url
+  end
+
+  before(:each) do
+    template.instance_eval do
+      def wizard; @wizard; end
+    end
+
+    @wizard = assigns[:wizard] = TestWizard.new(nil, mock(Object, :wizard_url => "/hello/world"))
+  end
+
+  def do_it
+    render "<%= name %>/show.html"
+  end
+
+  it "has a form that posts to the wizard\'s URL" do
+    do_it
+
+    response.should have_tag("form[action=?][method=?]", @wizard.url, 'post')
+  end
+
+  it "has a hidden field with the wizard\'s step" do
+    do_it
+
+    response.should have_tag("input[type=?][name=?][value=?]", 'hidden', 'step', @wizard.step.name)
+  end
 
   describe 'when the wizard is NOT done' do
-    it "renders the partial for the wizard\'s step passing it the wizard and form builder"
-    it "has a submit button labeled next"
+    before(:each) do
+      @wizard.stub!(:done?).and_return(false)
+    end
+
+    it "renders the partial for the wizard\'s step passing it the wizard and form builder" do
+      template.should_receive(:render).with(:partial => @wizard.step.view, :locals => { :wizard => @wizard, :form => anything } )
+
+      do_it
+    end
+
+    it "has a submit button labeled next" do
+      do_it
+
+      response.should have_tag("input[type=?][value=?]", "submit", "Next")
+    end
   end
 
   describe 'when the wizard is done' do
-    it "renders the done partial"
-    it "does not have a submit button"
+    before(:each) do
+      @wizard.stub!(:done?).and_return(true)
+    end
+
+    it "renders the done partial" do
+      template.should_receive(:render).with(:partial => "done", :locals => { :wizard => @wizard, :form => anything } )
+
+      do_it
+    end
+
+    it "does not have a submit button" do
+      do_it
+
+      response.should_not have_tag("input[type=?][value=?]", "submit", "Next")
+    end
   end
 end
