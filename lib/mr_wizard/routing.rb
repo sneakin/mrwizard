@@ -7,7 +7,7 @@ module MrWizard
       path_template = args.pop
       path_template ||= "/#{name}"
 
-      controller = options[:controller]
+      controller = options[:controller] || name
 
       map.with_options(:controller => controller, :defaults => { :step => nil }) do |w|
         w.named_route(name.to_s, "#{path_template}/:step",
