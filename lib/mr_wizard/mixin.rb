@@ -4,10 +4,6 @@ module MrWizard
       base.helper_method :wizard
     end
 
-    def wizard
-      @wizard ||= create_wizard
-    end
-
     def show
       @title = wizard.title
       render :action => 'show'
@@ -19,6 +15,10 @@ module MrWizard
       else
         show
       end
+    end
+
+    def wizard
+      @wizard ||= create_wizard
     end
 
     def create_wizard

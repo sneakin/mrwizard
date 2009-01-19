@@ -2,24 +2,15 @@ module MrWizard
   class Step
     class_inheritable_accessor :title
     attr_reader :wizard
+    delegate :params, :controller, :to => :wizard
 
     def initialize(wizard)
       @wizard = wizard
     end
 
-    delegate :params, :controller, :to => :wizard
-
-    def show
-      true
-    end
-
-    def update
-      true
-    end
-
-    def needed?
-      true
-    end
+    def show; true; end
+    def update; true; end
+    def needed?; true; end
 
     def name
       view.to_sym

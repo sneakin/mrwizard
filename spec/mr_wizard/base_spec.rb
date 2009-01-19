@@ -40,32 +40,36 @@ describe MrWizard::Base do
 
   describe '#step_name' do
     it "returns the step class\' modularized class name" do
-      @wizard.step_name(:beta).should == "Test::BetaStep"
+      @wizard.send(:step_name, :beta).should == "Test::BetaStep"
     end
   end
 
   describe '#create_step' do
+    def do_it(*args)
+      @wizard.send(:create_step, *args)
+    end
+
     describe 'with a nil name' do
-      it "returns an instance of the first step" do
-        @wizard.create_step(nil).should be_kind_of(Test::AlphaStep)
+      it "raises an ArgumentError" do
+        lambda { do_it(nil) }.should raise_error(ArgumentError)
       end
     end
 
     describe 'with a step name' do
       it "returns an instance of step whose name matches" do
-        @wizard.create_step(:beta).should be_kind_of(Test::BetaStep)
+        do_it(:beta).should be_kind_of(Test::BetaStep)
       end
     end
 
     describe 'with :done' do
       it "returns an instance of DoneStep" do
-        @wizard.create_step(:done).should be_kind_of(MrWizard::DoneStep)
+        do_it(:done).should be_kind_of(MrWizard::DoneStep)
       end
     end
 
     describe 'with a bad step name' do
       it "raises an ArgumentError" do
-        lambda { @wizard.create_step(:wtf) }.should raise_error(ArgumentError)
+        lambda { do_it(:wtf) }.should raise_error(ArgumentError)
       end
     end
   end
