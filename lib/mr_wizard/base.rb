@@ -75,7 +75,7 @@ module MrWizard
     end
 
     def done?
-      @step.name == :done
+      @step.kind_of? MrWizard::DoneStep
     end
 
     def url(params = Hash.new)
