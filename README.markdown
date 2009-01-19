@@ -14,8 +14,8 @@ Usage
 That will generate:
 
 * ContactController
-* `personal_info`, `survey`, and `message` steps under `apps/controllers/contact` along with a common base step.
-* A show view for the wizard and a partial for each step under `apps/views/contact`
+* `personal_info`, `survey`, and `message` steps under `app/controllers/contact` along with a common base step.
+* A show view for the wizard and a partial for each step under `app/views/contact`
 * Specs under `spec/controllers/contact` for each step
 * Specs for the views under `spec/views/contact`
 
