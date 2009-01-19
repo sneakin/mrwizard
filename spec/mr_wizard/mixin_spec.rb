@@ -65,4 +65,12 @@ describe MrWizard::Mixin do
       end
     end
   end
+
+  describe '#create_wizard' do
+    it "instantiates the controller's wizard class with the :step param and the wizard" do
+      @controller.class.wizard_class.should_receive(:new).with(@controller.params[:step], @controller)
+
+      @controller.create_wizard
+    end
+  end
 end
