@@ -83,10 +83,18 @@ describe MrWizard::Base do
   end
 
   describe '#show' do
-    it "is delegated to the step" do
+    before(:each) do
+      @params = { :data => 'Hello' }
+    end
+
+    it "sets the params to the supplied argument" do
+      lambda { @wizard.show(@params) }.should change(@wizard, :params).to(@params)
+    end
+
+    it "is shows the step" do
       @wizard.step.should_receive(:show).and_return(:show)
 
-      @wizard.show.should == :show
+      @wizard.show(@params).should == :show
     end
   end
 
@@ -229,6 +237,24 @@ describe MrWizard::Base do
     end
   end
 
+  describe '#last_step?' do
+    describe 'when the next step is done' do
+      before(:each) do
+        @wizard.stub!(:next_step).and_return(:done)
+      end
+
+      it "returns true" do
+        @wizard.should be_last_step
+      end
+    end
+
+    describe 'when the next step is not done' do
+      it "returns false" do
+        @wizard.should_not be_last_step
+      end
+    end
+  end
+
   describe '#url' do
     it "calls the method specified by the wizard\'s URL on the controller" do
       @controller.should_receive(:wizard_url).and_return(:url)
@@ -247,12 +273,42 @@ describe MrWizard::Base do
     end
 
     describe 'with a :step param' do
-      it "passes the supplied :step as the :step param" do
-        @controller.should_receive(:wizard_url).
-          with(:step => :beta).
-          and_return(:url)
+      describe 'that is :done' do
+        describe 'and has a done url' do
+          class DoneTestWizard < TestWizard
+            self.done_url = :done_url
+          end
 
-        @wizard.url(:step => :beta).should == :url
+          before(:each) do
+            @wizard = DoneTestWizard.new(:done, @controller)
+          end
+
+          it "calls the done url on the controller and returns the result" do
+            @controller.should_receive(:done_url).and_return(:done_url)
+
+            @wizard.url(:step => :done).should == :done_url
+          end
+        end
+
+        describe 'without a done url' do
+          it "passes the supplied :step as the :step param" do
+            @controller.should_receive(:wizard_url).
+              with(:step => :done).
+              and_return(:url)
+
+            @wizard.url(:step => :done).should == :url
+          end
+        end
+      end
+
+      describe 'that is not :done' do
+        it "passes the supplied :step as the :step param" do
+          @controller.should_receive(:wizard_url).
+            with(:step => :beta).
+            and_return(:url)
+
+          @wizard.url(:step => :beta).should == :url
+        end
       end
     end
 

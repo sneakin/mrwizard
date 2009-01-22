@@ -6,11 +6,12 @@ module MrWizard
 
     def show
       @title = wizard.title
+      wizard.show(params[:wizard] || Hash.new)
       render :action => 'show'
     end
 
     def create
-      if wizard.update(params[:wizard])
+      if wizard.update(params[:wizard] || Hash.new)
         redirect_to(wizard.url(:step => wizard.next_step))
       else
         show

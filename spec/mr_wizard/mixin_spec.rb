@@ -29,6 +29,12 @@ describe MrWizard::Mixin do
       lambda { @controller.show }.should change { @controller.instance_variable_get('@title') }
     end
 
+    it "tells the wizard to show" do
+      @controller.wizard.should_receive(:show).with(@controller.params[:wizard])
+
+      @controller.show
+    end
+
     it "renders the show action" do
       @controller.should_receive(:render).with(:action => 'show')
 

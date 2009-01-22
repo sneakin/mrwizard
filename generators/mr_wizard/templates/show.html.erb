@@ -4,7 +4,11 @@
   <%= render :partial => wizard.step.view, :locals => { :wizard => wizard, :form => f } %>
   <% unless wizard.done? -%>
   <div class="buttons">
-    <%= f.submit 'Next' %>
+    <% if wizard.last_step? -%>
+      <%= f.submit 'Finish' %>
+    <% else -%>
+      <%= f.submit 'Next' %>
+    <% end -%>
   </div>
   <% end -%>
 <% end -%>

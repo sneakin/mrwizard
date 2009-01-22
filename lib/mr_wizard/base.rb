@@ -1,6 +1,6 @@
 module MrWizard
   class Base
-    class_inheritable_accessor :steps, :url
+    class_inheritable_accessor :steps, :url, :done_url
     attr_reader :step, :controller, :params
     delegate :title, :show, :to => :step
 
@@ -27,6 +27,11 @@ module MrWizard
       end
     end
 
+    def show(params)
+      @params = params
+      @step.show
+    end
+
     def update(params)
       @params = params
       @step.update
@@ -36,8 +41,17 @@ module MrWizard
       @step.kind_of? MrWizard::DoneStep
     end
 
+    def last_step?
+      next_step == :done
+    end
+
     def url(params = Hash.new)
-      controller.send(self.class.url, { :step => @step.name }.merge(params))
+      if (params[:step] == :done || (params[:step] == nil && done?)) &&
+          self.class.done_url
+        controller.send(self.class.done_url)
+      else
+        controller.send(self.class.url, { :step => @step.name }.merge(params))
+      end
     end
 
     def next_step(step = @step)
